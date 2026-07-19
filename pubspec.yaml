@@ -1,5 +1,5 @@
 name: service
-description: ZatGo Field Service — tickets & customer signature (crm_plus).
+description: ZatGo Field Service — tickets & customer signature (zatgo_core).
 publish_to: "none"
 version: 0.1.0+1
 
@@ -14,7 +14,7 @@ dependencies:
   go_router: ^15.1.2
   http: ^1.6.0
   zatgo_dart_sdk:
-    path: ../../SharedSDK/dart_sdk
+    path: ../../../SharedSDK/dart_sdk
 
 dev_dependencies:
   flutter_test:
