@@ -11,7 +11,7 @@ Field jobs: day’s tickets, status workflow, notes, and customer signature capt
 ## Requirements
 
 - Flutter 3.24+
-- Optional running site (default `http://127.0.0.1:8082`)
+- Optional running site (default `https://erp.zatgo.online`)
 - Sign in with ERPNext email/password (or Continue offline)
 
 ## Run
@@ -19,7 +19,7 @@ Field jobs: day’s tickets, status workflow, notes, and customer signature capt
 ```bash
 cd Clients/flutter/service
 flutter pub get
-flutter run --dart-define=FRAPPE_BASE_URL=http://127.0.0.1:8082
+flutter run --dart-define=FRAPPE_BASE_URL=https://erp.zatgo.online
 ```
 
 ## App map

@@ -6,14 +6,14 @@ class ServiceSession extends ChangeNotifier {
   ServiceSession() {
     final base = const String.fromEnvironment(
       'FRAPPE_BASE_URL',
-      defaultValue: 'http://127.0.0.1:8082',
+      defaultValue: 'https://erp.zatgo.online',
     );
     baseUrl = base.replaceAll(RegExp(r'/$'), '');
   }
 
   final ErpnextSessionStore store = ErpnextSessionStore();
 
-  String baseUrl = 'http://127.0.0.1:8082';
+  String baseUrl = 'https://erp.zatgo.online';
   String? user;
   String? fullName;
   String? lastError;
