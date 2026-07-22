@@ -49,20 +49,62 @@ class MockServiceRepo {
     final rows = env.data is List ? env.data as List : const [];
     _tickets = [
       for (var i = 0; i < rows.length; i++)
-        ServiceTicket(
-          id: '${(rows[i] as Map)['name'] ?? (rows[i] as Map)['id'] ?? 'tkt-$i'}',
-          number:
-              '${(rows[i] as Map)['number'] ?? (rows[i] as Map)['name'] ?? 'TKT-$i'}',
-          customer: '${(rows[i] as Map)['customer'] ?? ''}',
-          address: '${(rows[i] as Map)['address'] ?? ''}',
-          issue:
-              '${(rows[i] as Map)['subject'] ?? (rows[i] as Map)['issue'] ?? (rows[i] as Map)['title'] ?? 'Ticket ${i + 1}'}',
-          status: TicketStatus.open,
-          priority: TicketPriority.normal,
-          scheduledAt: DateTime.now().add(Duration(hours: i)),
-          notes: const [],
-        ),
+        if (rows[i] is Map)
+          _mapTicket(Map<String, dynamic>.from(rows[i] as Map), i),
     ];
+  }
+
+  ServiceTicket _mapTicket(Map<String, dynamic> row, int i) {
+    final scheduledRaw = row['scheduled_at']?.toString();
+    final scheduledAt = scheduledRaw == null || scheduledRaw.isEmpty
+        ? DateTime.now().add(Duration(hours: i))
+        : (DateTime.tryParse(scheduledRaw) ??
+            DateTime.now().add(Duration(hours: i)));
+    return ServiceTicket(
+      id: '${row['name'] ?? row['id'] ?? 'tkt-$i'}',
+      number: '${row['number'] ?? row['name'] ?? 'TKT-$i'}',
+      customer: '${row['customer'] ?? ''}',
+      address: '${row['address'] ?? ''}',
+      issue:
+          '${row['subject'] ?? row['issue'] ?? row['title'] ?? 'Ticket ${i + 1}'}',
+      status: _parseStatus(row['status']?.toString()),
+      priority: _parsePriority(row['priority']?.toString()),
+      scheduledAt: scheduledAt,
+      notes: const [],
+    );
+  }
+
+  TicketStatus _parseStatus(String? raw) {
+    switch ((raw ?? '').trim().toLowerCase()) {
+      case 'scheduled':
+        return TicketStatus.scheduled;
+      case 'in progress':
+      case 'in_progress':
+        return TicketStatus.inProgress;
+      case 'awaiting signature':
+      case 'awaiting_signature':
+        return TicketStatus.awaitingSignature;
+      case 'closed':
+      case 'completed':
+        return TicketStatus.closed;
+      case 'open':
+      default:
+        return TicketStatus.open;
+    }
+  }
+
+  TicketPriority _parsePriority(String? raw) {
+    switch ((raw ?? '').trim().toLowerCase()) {
+      case 'low':
+        return TicketPriority.low;
+      case 'high':
+        return TicketPriority.high;
+      case 'urgent':
+        return TicketPriority.urgent;
+      case 'normal':
+      default:
+        return TicketPriority.normal;
+    }
   }
 
   List<ServiceTicket> listTickets({TicketStatus? status}) {
