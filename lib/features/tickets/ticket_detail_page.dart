@@ -64,15 +64,15 @@ class _TicketDetailPageState extends ConsumerState<TicketDetailPage> {
               color: theme.colorScheme.onSurfaceVariant,
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
+          _SectionHeader('Issue'),
+          const SizedBox(height: 8),
           Card(
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Issue', style: theme.textTheme.titleSmall),
-                  const SizedBox(height: 6),
                   Text(ticket.issue),
                   const SizedBox(height: 12),
                   Row(
@@ -81,7 +81,9 @@ class _TicketDetailPageState extends ConsumerState<TicketDetailPage> {
                       const Spacer(),
                       Text(
                         'Scheduled ${_fmt(ticket.scheduledAt)}',
-                        style: theme.textTheme.bodySmall,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
                       ),
                     ],
                   ),
@@ -89,9 +91,9 @@ class _TicketDetailPageState extends ConsumerState<TicketDetailPage> {
               ),
             ),
           ),
-          const SizedBox(height: 16),
-          Text('Workflow', style: theme.textTheme.titleMedium),
-          const SizedBox(height: 8),
+          const SizedBox(height: 20),
+          _SectionHeader('Workflow'),
+          const SizedBox(height: 10),
           Wrap(
             spacing: 8,
             runSpacing: 8,
@@ -120,23 +122,31 @@ class _TicketDetailPageState extends ConsumerState<TicketDetailPage> {
                 ),
             ],
           ),
-          const SizedBox(height: 20),
-          Text('Notes', style: theme.textTheme.titleMedium),
-          const SizedBox(height: 8),
+          const SizedBox(height: 24),
+          _SectionHeader('Notes'),
+          const SizedBox(height: 10),
           if (ticket.notes.isEmpty)
-            Text(
-              'No notes yet.',
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Text(
+                  'No notes yet.',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
               ),
             )
           else
             ...ticket.notes.map(
-              (n) => Card(
-                child: ListTile(
-                  dense: true,
-                  leading: const Icon(Icons.sticky_note_2_outlined),
-                  title: Text(n),
+              (n) => Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Card(
+                  child: ListTile(
+                    dense: true,
+                    leading: const Icon(Icons.sticky_note_2_outlined),
+                    title: Text(n),
+                  ),
                 ),
               ),
             ),
@@ -165,9 +175,9 @@ class _TicketDetailPageState extends ConsumerState<TicketDetailPage> {
             ],
           ),
           if (ticket.hasSignature) ...[
-            const SizedBox(height: 20),
-            Text('Customer signature', style: theme.textTheme.titleMedium),
-            const SizedBox(height: 8),
+            const SizedBox(height: 24),
+            _SectionHeader('Customer signature'),
+            const SizedBox(height: 10),
             Card(
               child: ListTile(
                 leading: Icon(Icons.verified, color: theme.colorScheme.primary),
@@ -217,7 +227,8 @@ class _TicketDetailPageState extends ConsumerState<TicketDetailPage> {
                     color: Theme.of(ctx).colorScheme.outlineVariant,
                   ),
                   borderRadius: BorderRadius.circular(12),
-                  color: const Color(0xFFF8FAF9),
+                  color: Theme.of(ctx).colorScheme.surfaceContainerHighest
+                      .withValues(alpha: 0.35),
                 ),
                 child: Text(
                   '✕  signature canvas stub',
@@ -251,5 +262,21 @@ class _TicketDetailPageState extends ConsumerState<TicketDetailPage> {
     final h = dt.hour.toString().padLeft(2, '0');
     final m = dt.minute.toString().padLeft(2, '0');
     return '$h:$m';
+  }
+}
+
+class _SectionHeader extends StatelessWidget {
+  const _SectionHeader(this.label);
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      label,
+      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w700,
+          ),
+    );
   }
 }

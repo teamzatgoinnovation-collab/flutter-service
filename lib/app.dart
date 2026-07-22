@@ -95,7 +95,9 @@ class FieldServiceApp extends ConsumerWidget {
     final router = ref.watch(_routerProvider);
     return MaterialApp.router(
       title: 'ZatGo Field Service',
-      theme: buildFieldServiceTheme(),
+      theme: buildFieldServiceTheme(brightness: Brightness.light),
+      darkTheme: buildFieldServiceTheme(brightness: Brightness.dark),
+      themeMode: ThemeMode.system,
       routerConfig: router,
       debugShowCheckedModeBanner: false,
     );
